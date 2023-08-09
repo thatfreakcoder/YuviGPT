@@ -47,6 +47,7 @@ function sendIncomingMessage(message, removeTyping) {
         document.getElementById('msgBox').innerHTML += div;
         scrollToBottomSmoothly();
     } else {
+        message = marked.parse(message)
         document.getElementById('last-msg').innerHTML = message;
         document.getElementById('last-msg').removeAttribute('id');
     }
@@ -80,12 +81,8 @@ async function sendMessage() {
         sendIncomingMessage("typing...", false);
         }
     }, 600);
-    // const response = await fetch('http://localhost:5000/chat?conversation_id=e57c4930-f8e0-40b6-979b-651a54f5ec8f&prompt=' + message);
-    // ({ message: reply, conversation_id, parent_id } = await response.json());
-    // console.log(reply, conversation_id, parent_id);
-    setTimeout(() => {
-        sendIncomingMessage("HI, How can I help you today?", true);
-    }, 2000);
+    const response = await fetch('http://localhost:5000/chat?conversation_id=0e557191-3db2-4180-a05b-fc94d1cf05f0&prompt=' + message);
+    ({ message: reply, conversation_id, parent_id } = await response.json());
+    console.log("reply:", reply, "\nconversation_id:", conversation_id, "\nparent_id:", parent_id);
+    sendIncomingMessage(reply, true);
 }
-
-// getStarted()

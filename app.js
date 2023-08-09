@@ -75,6 +75,7 @@ async function sendMessage() {
     const msgElement = document.getElementById('message')
     const message = msgElement.value;
     sendNewMessage(message);
+    document.getElementById("msgBox").scrollTop = document.getElementById("msgBox").scrollHeight;
     msgElement.value = '';
     setTimeout(() => {
         if (message.includes('?')) {
@@ -90,3 +91,8 @@ async function sendMessage() {
         sendIncomingMessage("reply", true);
     }, 2000);
 }
+
+document.getElementById("text-box").addEventListener("submit", (e) => {
+    e.preventDefault();
+    sendMessage();
+})

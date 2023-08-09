@@ -9,6 +9,11 @@
     --outgoing-txt: var(--black);
 }
 
+#msgBox {
+    max-height: 80vh!important;
+    min-height: 80vh!important;
+}
+
 @media (prefers-color-scheme: dark) {
     :root {
         --bg-color: var(--black);

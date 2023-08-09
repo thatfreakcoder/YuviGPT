@@ -14,7 +14,7 @@
 </head>
 <body>
     <div class="gutter-top" style="margin-top: 100px!important;"></div>
-    <div class="outer-wrap" id="msgBox">
+    <div class="w-75 h-100 m-auto d-flex flex-column" id="msgBox">
         <div class="wrap">
             <div class="message" data-aos="fade-up-right">
                 <div class="profile-picture">
@@ -28,9 +28,10 @@
         </div>
     </div>
     <div class="input">
+        <form id="text-box">
         <input type="text" placeholder="Type a message" id="message" />
-        <button onclick="sendMessage()"><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-sent.png" alt="Send" /></button>
-        <button onclick="sendIncomingMessage('Hello')"><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-sent.png" alt="Send" /></button>
+        <button><img src="https://img.icons8.com/ios-glyphs/30/000000/filled-sent.png" alt="Send" /></button>
+        </form>
     </div>
     <div id="gutter-bottom" style="margin-bottom: 100px!important;"></div>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

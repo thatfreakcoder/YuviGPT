@@ -88,7 +88,7 @@ async function SendMsgByBot(msg) {
 
   let result;
   // setTimeout(async () => {
-  const response = await fetch(`http://localhost:5000/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
+  const response = await fetch(`https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
   ({ message: reply, conversation_id, parent_id } = await response.json());
   const output = getFollowUpQuestion(reply);
   reply = marked.parse(output.msg);
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // setTimeout(() => {
   // let reply = "Hello world!"
-  const response = await fetch(`http://localhost:5000/start`);
+  const response = await fetch(`https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com/start`);
   ({ message: reply, conversation_id, parent_id } = await response.json());
   const output = getFollowUpQuestion(reply);
   reply = marked.parse(output.msg);

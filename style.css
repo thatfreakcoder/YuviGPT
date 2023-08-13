@@ -17,6 +17,7 @@ select {
 
 .bot-response {
     background: #e6e6e6;
+    box-shadow: 20px 20px 60px #cecece, -20px -20px 60px #ffffff;
     font-size: 17px;
     line-height: 24px;
     border-radius: 20px;
@@ -54,6 +55,7 @@ select {
 
 .user-response {
     background: rgb(0, 102, 255);
+    box-shadow: 10px 11px 30px #a7a7a7, -20px -20px 60px #ffffff;
     color: rgb(255, 255, 255);
     font-size: 17px;
     line-height: 24px;
@@ -156,7 +158,7 @@ a {
 }
 
 .ContentChat {
-    background: rgb(234, 238, 243);
+    background: #f2f2f2!important;
     width: 100%;
     height: 400px;
     overflow-y: scroll;

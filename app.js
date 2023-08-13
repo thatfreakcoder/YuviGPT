@@ -23,7 +23,7 @@ var status_func_SendMsgByBot = 0;
 
 // Function Send Massage user in content chat
 function SendMsgByUser() {
-  if (input.value != "" && status_func_SendMsgBot == 0) {
+  if (input.value != "" && status_func_SendMsgByBot == 0) {
     san1.classList.add("none");
     san2.classList.remove("none");
 
@@ -39,7 +39,7 @@ function SendMsgByUser() {
     elementMSG.innerHTML = `<div class="user-response">${input.value}</div>`;
     ContentChat.appendChild(elementMSG);
     elementMSG.scrollIntoView();
-    SendMsgBot(input.value);
+    SendMsgByBot(input.value);
     input.value = "";
   }
 }
@@ -61,18 +61,23 @@ async function SendMsgByBot(msg) {
   elementMSG.innerHTML = `<div class="bot-response text" text-first="true"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve"> <rect x="0" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> <rect x="10" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.2s" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> <rect x="20" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.4s" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> </svg></div>`;
   ContentChat.appendChild(elementMSG);
 
+  let statusElement = document.getElementById("status");
+  statusElement.innerHTML = "Typing...";
+
   let result;
   // setTimeout(async () => {
-  const response = await fetch(`http://localhost:5000/chat?conversation_id=9423823c-c1f7-4fca-8471-915fabb0bbeb&parent_id=${parent_id}&prompt=${msg}`);
-  ({ message: reply, conversation_id, parent_id } = await response.json());
-  reply = marked.parse(reply)
-  result = `<div class="bot-response text" text-first="true">${reply}</div>`;
+    const response = await fetch(`http://localhost:5000/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
+    ({ message: reply, conversation_id, parent_id } = await response.json());
+    reply = marked.parse(reply)
+    // let reply = "Hello world!"
+    result = `<div class="bot-response text" text-first="true">${reply}</div>`;
 
-  elementMSG.innerHTML = result;
-  elementMSG.scrollIntoView();
-  san1.classList.remove("none");
-  san2.classList.add("none");
-  status_func_SendMsgByBot = 0;
+    elementMSG.innerHTML = result;
+    elementMSG.scrollIntoView();
+    san1.classList.remove("none");
+    san2.classList.add("none");
+    status_func_SendMsgByBot = 0;
+    statusElement.innerHTML = "Online";
   // }, 2000);
   ContentChat.appendChild(elementMSG);
   elementMSG.scrollIntoView();
@@ -91,19 +96,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   elementMSG.innerHTML = `<div class="bot-response text" text-first="true"><svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve"> <rect x="0" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> <rect x="10" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.2s" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> <rect x="20" y="0" width="4" height="10" fill="rgb(155, 166, 178)"> <animateTransform attributeType="xml" attributeName="transform" type="translate" values="0 0; 0 20; 0 0" begin="0.4s" dur="0.6s" repeatCount="indefinite"> </animateTransform> </rect> </svg></div>`;
   ContentChat.appendChild(elementMSG);
 
+  let statusElement = document.getElementById("status");
+  statusElement.innerHTML = "Typing...";
+
   status_func_SendMsgByBot = 1;
   san1.classList.add("none");
   san2.classList.remove("none");
   elementMSG.scrollIntoView();
 
   // setTimeout(() => {
-  const response = await fetch(`http://localhost:5000/start`);
-  ({ message: reply, conversation_id, parent_id } = await response.json());
-  reply = marked.parse(reply);
-  elementMSG.innerHTML = `<div class="bot-response text" text-first="true">${reply}</div>`;
-  elementMSG.scrollIntoView();
-  san1.classList.remove("none");
-  san2.classList.add("none");
-  status_func_SendMsgByBot = 0;
+    // let reply = "Hello world!"
+    const response = await fetch(`http://localhost:5000/start`);
+    ({ message: reply, conversation_id, parent_id } = await response.json());
+    reply = marked.parse(reply);
+    elementMSG.innerHTML = `<div class="bot-response text" text-first="true">${reply}</div>`;
+    elementMSG.scrollIntoView();
+    san1.classList.remove("none");
+    san2.classList.add("none");
+    status_func_SendMsgByBot = 0;
+    statusElement.innerHTML = "Online";
   // }, 2000)
 });

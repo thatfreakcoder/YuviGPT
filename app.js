@@ -158,14 +158,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 function getFollowUpQuestion(input) {
-  const json = input.match(/\{\s*"follow_up"\s*:\s*(.+?)\s*\}/)[0];
-  const follow_ups = JSON.parse(json).follow_up;
-  const remaining = input.replace(json, "").replace("``````", "");
-
-  const output = {
-    "msg": remaining,
-    follow_ups
+  try {
+    const json = input.match(/\{\s*"follow_up"\s*:\s*(.+?)\s*\}/)[0];
+    const follow_ups = JSON.parse(json).follow_up;
+    const remaining = input.replace(json, "").replace("``````", "");
+    const output = {
+      "msg": remaining,
+      follow_ups
+    }
+    console.log(output);
+    return output
+  } catch (e) {
+    const follow_ups = ["Tell me about your Projects!", "What are your future plans?", "How do you spend your free time?"];
+    const remaining = input;
+    const output = {
+      "msg": remaining,
+      follow_ups
+    }
+    console.log(output);
+    return output
   }
-  console.log(output);
-  return output
 }

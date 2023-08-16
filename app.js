@@ -5,8 +5,10 @@ var san1 = document.getElementById("send1");
 var san2 = document.getElementById("send2");
 var parent_id;
 var conversation_id;
-// Add event Click for icon send input message
+var apiUrl = "https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
+// var apiUrl = "http://localhost:5000";
 
+// Add event Click for icon send input message
 send_icon.addEventListener("click", SendMsgByUser);
 
 // Add event Enter for input message
@@ -88,7 +90,7 @@ async function SendMsgByBot(msg) {
 
   let result;
   // setTimeout(async () => {
-  const response = await fetch(`https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
+  const response = await fetch(`${apiUrl}/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
   ({ message: reply, conversation_id, parent_id } = await response.json());
   const output = getFollowUpQuestion(reply);
   reply = marked.parse(output.msg);
@@ -115,6 +117,15 @@ async function SendMsgByBot(msg) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
+  var isNew = localStorage.getItem("isNew");
+  if (isNew === null) {
+      localStorage.setItem("isNew", 1);
+      isNew = 1;
+  } else {
+      isNew = 0;
+      conversation_id = localStorage.getItem("conversation_id");
+      parent_id = localStorage.getItem("parent_id");
+  }
   let elementCPT = document.createElement("div");
   elementCPT.classList.add("captionBot", "msgCaption");
   elementCPT.innerHTML = '<img src="./assets/yuvraj-image.jpg" alt="YuviGPT"> <span>YuviGPT</span>';
@@ -136,8 +147,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // setTimeout(() => {
   // let reply = "Hello world!"
-  const response = await fetch(`https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com/start`);
+  const startUrl = isNew === 1 ? `${apiUrl}/start?new=${isNew}` : `${apiUrl}/start?new=${isNew}&conversation_id=${conversation_id}&parent_id=${parent_id}`;
+  console.log(`${startUrl}`);
+  const response = await fetch(`${startUrl}`);
   ({ message: reply, conversation_id, parent_id } = await response.json());
+  localStorage.setItem("conversation_id", conversation_id);
+  localStorage.setItem("parent_id", parent_id);
   const output = getFollowUpQuestion(reply);
   reply = marked.parse(output.msg);
   elementMSG.innerHTML = `

@@ -5,7 +5,7 @@ var san1 = document.getElementById("send1");
 var san2 = document.getElementById("send2");
 var parent_id;
 var conversation_id;
-var apiUrl = "https://yuvigpt-server.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
+var apiUrl = "https://server-yuvigpt.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
 // var apiUrl = "http://localhost:5000";
 
 // Add event Click for icon send input message
@@ -149,25 +149,36 @@ document.addEventListener("DOMContentLoaded", async () => {
   // let reply = "Hello world!"
   const startUrl = isNew === 1 ? `${apiUrl}/start?new=${isNew}` : `${apiUrl}/start?new=${isNew}&conversation_id=${conversation_id}&parent_id=${parent_id}`;
   console.log(`${startUrl}`);
-  const response = await fetch(`${startUrl}`);
-  ({ message: reply, conversation_id, parent_id } = await response.json());
-  localStorage.setItem("conversation_id", conversation_id);
-  localStorage.setItem("parent_id", parent_id);
-  const output = getFollowUpQuestion(reply);
-  reply = marked.parse(output.msg);
-  elementMSG.innerHTML = `
-    <div class="bot-response text" text-first="true">${reply}</div>
-    <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
-      </div>
-    `;
-  elementMSG.scrollIntoView();
-  san1.classList.remove("none");
-  san2.classList.add("none");
-  status_func_SendMsgByBot = 0;
-  statusElement.innerHTML = "Online";
+  try {
+    const response = await fetch(`${startUrl}`);
+    ({ message: reply, conversation_id, parent_id } = await response.json());
+    localStorage.setItem("conversation_id", conversation_id);
+    localStorage.setItem("parent_id", parent_id);
+    const output = getFollowUpQuestion(reply);
+    reply = marked.parse(output.msg);
+    elementMSG.innerHTML = `
+      <div class="bot-response text" text-first="true">${reply}</div>
+      <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
+          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
+          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
+          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
+        </div>
+      `;
+      elementMSG.scrollIntoView();
+      san1.classList.remove("none");
+      san2.classList.add("none");
+      status_func_SendMsgByBot = 0;
+      statusElement.innerHTML = "Online";
+    } catch (e) {
+    console.log(e);
+    elementMSG.innerHTML = `
+      <div class="bot-response text" text-first="true">Sorry! I am currently Offline 😔! Try refreshing the page or come back in a few minutes.</div>`
+      elementMSG.scrollIntoView();
+      san1.classList.remove("none");
+      san2.classList.add("none");
+      status_func_SendMsgByBot = 0;
+      statusElement.innerHTML = "Online";
+  }
   // }, 2000)
 });
 
@@ -194,3 +205,27 @@ function getFollowUpQuestion(input) {
     return output
   }
 }
+
+document.getElementById("darkMode").addEventListener("change", (e) => {
+  let darkMode = e.target.checked;
+  if (darkMode === true) {
+    // get all element with style var dark
+    document.querySelector(":root").style.setProperty("--body-bg-color", "#000000");
+    document.querySelector(":root").style.setProperty("--bot-response-bg-color", "#333333");
+    document.querySelector(":root").style.setProperty("--bot-response-text-color", "#fff");
+    document.querySelector(":root").style.setProperty("--bot-response-shadow", "20px 20px 60px #181818, -20px -20px 60px #000000");
+    document.querySelector(":root").style.setProperty("--user-response-shadow", "24px 11px 26px #1F1F20, 3px -6px 13px #000000");
+    document.querySelector(":root").style.setProperty("--bot-caption-text-color", "grey");
+    document.querySelector(":root").style.setProperty("--content-chat-bg-color", "#1c1c1c");
+    document.querySelector(":root").style.setProperty("--container", "#000");
+  } else {
+    document.querySelector(":root").style.setProperty("--body-bg-color", "#673ab7");
+    document.querySelector(":root").style.setProperty("--bot-response-bg-color", "#fff");
+    document.querySelector(":root").style.setProperty("--bot-response-text-color", "#000");
+    document.querySelector(":root").style.setProperty("--bot-response-shadow", "20px 20px 60px #cecece, -20px -20px 60px #ffffff");
+    document.querySelector(":root").style.setProperty("--user-response-shadow", "10px 11px 30px #a7a7a7, -20px -20px 60px #ffffff");
+    document.querySelector(":root").style.setProperty("--bot-caption-text-color", "rgb(24, 25, 25)");
+    document.querySelector(":root").style.setProperty("--content-chat-bg-color", "#f2f2f2");
+    document.querySelector(":root").style.setProperty("--container", "#fff");
+  }
+})

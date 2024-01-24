@@ -3,10 +3,9 @@ var input = document.getElementsByClassName("InputMSG")[0];
 var ContentChat = document.getElementsByClassName("ContentChat")[0];
 var san1 = document.getElementById("send1");
 var san2 = document.getElementById("send2");
-var parent_id;
-var conversation_id;
-var apiUrl = "https://server-yuvigpt.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
-// var apiUrl = "http://localhost:5000";
+var thread_id;
+// var apiUrl = "https://server-yuvigpt.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
+var apiUrl = "http://localhost:8080";
 
 // Add event Click for icon send input message
 send_icon.addEventListener("click", SendMsgByUser);
@@ -90,9 +89,22 @@ async function SendMsgByBot(msg) {
 
   let result;
   // setTimeout(async () => {
-  const response = await fetch(`${apiUrl}/chat?conversation_id=${conversation_id}&parent_id=${parent_id}&prompt=${msg}`);
-  ({ message: reply, conversation_id, parent_id } = await response.json());
-  const output = getFollowUpQuestion(reply);
+  console.log(JSON.stringify({
+    "thread_id": thread_id,
+    "message": msg,
+  }));
+  const response = await fetch(`${apiUrl}/chat`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      "thread_id": thread_id,
+      "message": msg,
+    }),
+  });
+  const responseData = await response.json();
+  const output = getFollowUpQuestion(responseData.response);
   reply = marked.parse(output.msg);
   // let reply = "Hello world!"
   result = `
@@ -119,12 +131,11 @@ async function SendMsgByBot(msg) {
 document.addEventListener("DOMContentLoaded", async () => {
   var isNew = localStorage.getItem("isNew");
   if (isNew === null) {
-      localStorage.setItem("isNew", 1);
-      isNew = 1;
+    localStorage.setItem("isNew", 1);
+    isNew = 1;
   } else {
-      isNew = 0;
-      conversation_id = localStorage.getItem("conversation_id");
-      parent_id = localStorage.getItem("parent_id");
+    isNew = 0;
+    thread_id = localStorage.getItem("thread_id");
   }
   let elementCPT = document.createElement("div");
   elementCPT.classList.add("captionBot", "msgCaption");
@@ -147,38 +158,55 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // setTimeout(() => {
   // let reply = "Hello world!"
-  const startUrl = isNew === 1 ? `${apiUrl}/start?new=${isNew}` : `${apiUrl}/start?new=${isNew}&conversation_id=${conversation_id}&parent_id=${parent_id}`;
-  console.log(`${startUrl}`);
-  try {
-    const response = await fetch(`${startUrl}`);
-    ({ message: reply, conversation_id, parent_id } = await response.json());
-    localStorage.setItem("conversation_id", conversation_id);
-    localStorage.setItem("parent_id", parent_id);
-    const output = getFollowUpQuestion(reply);
-    reply = marked.parse(output.msg);
-    elementMSG.innerHTML = `
-      <div class="bot-response text" text-first="true">${reply}</div>
-      <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
-          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
-          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
-          <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
-        </div>
-      `;
-      elementMSG.scrollIntoView();
-      san1.classList.remove("none");
-      san2.classList.add("none");
-      status_func_SendMsgByBot = 0;
-      statusElement.innerHTML = "Online";
+  thread_id = localStorage.getItem("thread_id");
+  if (thread_id === null) {
+    // if not, create a new thread
+    try {
+      const response = await fetch(`${apiUrl}/start`);
+      const responseData = await response.json();
+      thread_id = responseData.thread_id;
+      localStorage.setItem("thread_id", thread_id);
+
+      // make a post request to /chat containing the thread id and message
+      const response2 = await fetch(`${apiUrl}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          "thread_id": thread_id,
+          "message": "Hi Yuvraj!",
+        }),
+      });
+      const responseData2 = await response2.json();
+      const output = getFollowUpQuestion(responseData2.response);
+      reply = marked.parse(output.msg);
+      // let reply = "Hello world!"
+      result = `
+    <div class="bot-response text" text-first="true">${reply}</div>
+    <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
+        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
+        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
+        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
+      </div>
+    `;
+
     } catch (e) {
-    console.log(e);
-    elementMSG.innerHTML = `
+      console.log(e);
+      elementMSG.innerHTML = `
       <div class="bot-response text" text-first="true">Sorry! I am currently Offline 😔! Try refreshing the page or come back in a few minutes.</div>`
-      elementMSG.scrollIntoView();
-      san1.classList.remove("none");
-      san2.classList.add("none");
-      status_func_SendMsgByBot = 0;
-      statusElement.innerHTML = "Online";
+    }
+  } else {
+    let reply = marked.parse("Jai Shree Ram, bhakt. Aapka yahaan punah swagat hai. Yadi aapko kisi prashna ka uttar chahiye ya aap kisi margdarshan ki khoj mein hain, to kripaya apne man ki baat vyakt keejiye. Main aapki puri madad karne ke liye yahaan upasthit hoon. Jai Shree Ram.");
+    elementMSG.innerHTML = `
+        <div class="bot-response text" text-first="true">${reply}</div>
+        `;
   }
+  elementMSG.scrollIntoView();
+  san1.classList.remove("none");
+  san2.classList.add("none");
+  status_func_SendMsgByBot = 0;
+  statusElement.innerHTML = "Online";
   // }, 2000)
 });
 

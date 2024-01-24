@@ -17,7 +17,25 @@
 }
 
 body {
+    background-image: url(https://stellarquines.co.uk/wp-content/uploads/2021/03/Hack-the-Patriarchy-header.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: var(--body-bg-color)
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
 }
 
 body,
@@ -245,6 +263,7 @@ a {
 }
 
 .container {
+    z-index: 99;
     width: 400px;
     height: 570px;
     background-color: var(--container);
@@ -263,9 +282,14 @@ a {
 
 @media only screen and (max-width: 500px) {
     .container {
+        z-index: 99;
         width: 100%;
         height: 100%;
         border-radius: 0px;
+    }
+
+    .overlay {
+        display: none;
     }
 
     body {

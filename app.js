@@ -110,9 +110,9 @@ async function SendMsgByBot(msg) {
   result = `
     <div class="bot-response text" text-first="true">${reply}</div>
     <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[0]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[1]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[2]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
       </div>
     `;
 
@@ -182,37 +182,53 @@ document.addEventListener("DOMContentLoaded", async () => {
       const output = getFollowUpQuestion(responseData2.response);
       reply = marked.parse(output.msg);
       // let reply = "Hello world!"
-      result = `
+      elementMSG.innerHTML = `
     <div class="bot-response text" text-first="true">${reply}</div>
     <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${output.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[0]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[0]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[1]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[1]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${output.follow_ups[2]}")' class="follow-up btn btn-outline-primary">${output.follow_ups[2]}</button>
       </div>
     `;
+      elementMSG.scrollIntoView();
+      san1.classList.remove("none");
+      san2.classList.add("none");
+      status_func_SendMsgByBot = 0;
+      statusElement.innerHTML = "Online";
+      ContentChat.appendChild(elementMSG);
+      elementMSG.scrollIntoView();
 
     } catch (e) {
       console.log(e);
       elementMSG.innerHTML = `
       <div class="bot-response text" text-first="true">Sorry! I am currently Offline 😔! Try refreshing the page or come back in a few minutes.</div>`
+      elementMSG.scrollIntoView();
+      san1.classList.remove("none");
+      san2.classList.add("none");
+      status_func_SendMsgByBot = 0;
+      statusElement.innerHTML = "Online";
+      ContentChat.appendChild(elementMSG);
+      elementMSG.scrollIntoView();
     }
   } else {
-    const input = getFollowUpQuestion("Jai Shree Ram, bhakt. Aapka yahaan punah swagat hai. Yadi aapko kisi prashna ka uttar chahiye ya aap kisi margdarshan ki khoj mein hain, to kripaya apne man ki baat vyakt keejiye. Main aapki puri madad karne ke liye yahaan upasthit hoon. Jai Shree Ram.")
+    const input = getFollowUpQuestion("Welcome Back! It's great to see you again. Do you want to start a new conversation or continue the previous one?")
     let reply = marked.parse(input.msg);
     elementMSG.innerHTML = `
         <div class="bot-response text" text-first="true">${reply}</div>
         <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
-        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[0]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[1]}</button>
-        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[2]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${input.follow_ups[0]}")' class="follow-up btn btn-outline-primary">${input.follow_ups[0]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${input.follow_ups[1]}")' class="follow-up btn btn-outline-primary">${input.follow_ups[1]}</button>
+        <button type="button" onclick='SendMsgByUser(false, "${input.follow_ups[2]}")' class="follow-up btn btn-outline-primary">${input.follow_ups[2]}</button>
       </div>
         `;
+    elementMSG.scrollIntoView();
+    san1.classList.remove("none");
+    san2.classList.add("none");
+    status_func_SendMsgByBot = 0;
+    statusElement.innerHTML = "Online";
+    ContentChat.appendChild(elementMSG);
+    elementMSG.scrollIntoView();
   }
-  elementMSG.scrollIntoView();
-  san1.classList.remove("none");
-  san2.classList.add("none");
-  status_func_SendMsgByBot = 0;
-  statusElement.innerHTML = "Online";
   // }, 2000)
 });
 

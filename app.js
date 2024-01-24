@@ -4,8 +4,8 @@ var ContentChat = document.getElementsByClassName("ContentChat")[0];
 var san1 = document.getElementById("send1");
 var san2 = document.getElementById("send2");
 var thread_id;
-// var apiUrl = "https://server-yuvigpt.njif787q55acg.ap-south-1.cs.amazonlightsail.com";
-var apiUrl = "http://localhost:8080";
+var apiUrl = "https://yuvigpt-server.onrender.com";
+// var apiUrl = "http://localhost:8080";
 
 // Add event Click for icon send input message
 send_icon.addEventListener("click", SendMsgByUser);
@@ -197,9 +197,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       <div class="bot-response text" text-first="true">Sorry! I am currently Offline 😔! Try refreshing the page or come back in a few minutes.</div>`
     }
   } else {
-    let reply = marked.parse("Jai Shree Ram, bhakt. Aapka yahaan punah swagat hai. Yadi aapko kisi prashna ka uttar chahiye ya aap kisi margdarshan ki khoj mein hain, to kripaya apne man ki baat vyakt keejiye. Main aapki puri madad karne ke liye yahaan upasthit hoon. Jai Shree Ram.");
+    const input = getFollowUpQuestion("Jai Shree Ram, bhakt. Aapka yahaan punah swagat hai. Yadi aapko kisi prashna ka uttar chahiye ya aap kisi margdarshan ki khoj mein hain, to kripaya apne man ki baat vyakt keejiye. Main aapki puri madad karne ke liye yahaan upasthit hoon. Jai Shree Ram.")
+    let reply = marked.parse(input.msg);
     elementMSG.innerHTML = `
         <div class="bot-response text" text-first="true">${reply}</div>
+        <div class="d-flex flex-column mt-3" id="follow-up-btn-group">
+        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[0]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[0]}</button>
+        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[1]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[1]}</button>
+        <button type="button" onclick="SendMsgByUser(false, '${input.follow_ups[2]}')" class="follow-up btn btn-outline-primary">${input.follow_ups[2]}</button>
+      </div>
         `;
   }
   elementMSG.scrollIntoView();

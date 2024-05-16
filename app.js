@@ -4,7 +4,7 @@ var ContentChat = document.getElementsByClassName("ContentChat")[0];
 var san1 = document.getElementById("send1");
 var san2 = document.getElementById("send2");
 var thread_id;
-var apiUrl = "https://yuvigpt-server.onrender.com";
+var apiUrl = "https://server-yuvigpt-new.njif787q55acg.ap-south-1.cs.amazonlightsail.com/";
 // var apiUrl = "http://localhost:8080";
 
 // Add event Click for icon send input message
@@ -25,7 +25,7 @@ var status_func_SendMsgByBot = 0;
 // Function Send message user in content chat
 function SendMsgByUser(from_input_field = true, msg = "") {
   if (from_input_field) {
-    console.log("triggered from input field");
+    // console.log("triggered from input field");
     if (input.value != "" && status_func_SendMsgByBot == 0) {
       san1.classList.add("none");
       san2.classList.remove("none");
@@ -46,7 +46,7 @@ function SendMsgByUser(from_input_field = true, msg = "") {
       input.value = "";
     }
   } else {
-    console.log("triggered from button click");
+    // console.log("triggered from button click");
     san1.classList.add("none");
     san2.classList.remove("none");
 
@@ -89,10 +89,10 @@ async function SendMsgByBot(msg) {
 
   let result;
   // setTimeout(async () => {
-  console.log(JSON.stringify({
-    "thread_id": thread_id,
-    "message": msg,
-  }));
+  // console.log(JSON.stringify({
+  //   "thread_id": thread_id,
+  //   "message": msg,
+  // }));
   const response = await fetch(`${apiUrl}/chat`, {
     method: "POST",
     headers: {
@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       elementMSG.scrollIntoView();
 
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       elementMSG.innerHTML = `
       <div class="bot-response text" text-first="true">Sorry! I am currently Offline 😔! Try refreshing the page or come back in a few minutes.</div>`
       elementMSG.scrollIntoView();
@@ -242,7 +242,7 @@ function getFollowUpQuestion(input) {
       "msg": remaining,
       follow_ups
     }
-    console.log(output);
+    // console.log(output);
     return output
   } catch (e) {
     const follow_ups = ["Tell me about your Projects!", "What are your future plans?", "How do you spend your free time?"];
@@ -251,7 +251,7 @@ function getFollowUpQuestion(input) {
       "msg": remaining,
       follow_ups
     }
-    console.log(output);
+    // console.log(output);
     return output
   }
 }
